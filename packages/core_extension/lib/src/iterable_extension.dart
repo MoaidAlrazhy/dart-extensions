@@ -41,13 +41,11 @@ extension IterableExtension<T> on Iterable<T?> {
     final flattened = [];
 
     for (final T? item in this)
-      item is List ? flattened.addAll(item.flatten) : flattened.add(item);
+      item is List ? flattened.addAll(item.flatten ?? []) : flattened.add(item);
 
     return flattened;
   }
 
-  Map<K, List<T?>> groupBy<K>(K Function(T?) fn) => fold(
-      <K, List<T?>>{},
-      (Map<K, List<T?>> map, T? element) =>
-          map..putIfAbsent(fn(element), () => <T>[]).add(element));
+  Map<K, List<T?>> groupBy<K>(K Function(T?) fn) =>
+      fold(<K, List<T?>>{}, (Map<K, List<T?>> map, T? element) => map..putIfAbsent(fn(element), () => <T>[]).add(element));
 }
